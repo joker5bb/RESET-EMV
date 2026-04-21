@@ -62,3 +62,33 @@ Max stares at the screen. The "SUCCESS" message reflects in his weary eyes.
 In this game, "free" always comes with a price. I just hadn't seen the bill yet.
 
 [SCENE END]
+
+AID: A0 00 00 00 04 10 10
+APDU:
+// --- STAGE 1: SELECT & AUTHENTICATE ---
+// Select Issuer Security Domain (ISD)
+00 A4 04 00 00
+
+// Initialize Update (Default Keys 40..4F)
+80 50 00 00 08 01 02 03 04 05 06 07 08
+
+// External Authenticate (Standard SCP02 Security)
+84 82 00 00 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+// --- STAGE 2: ROOT ERASE (WIPE) ---
+// Delete previous package and all related instances
+80 E4 00 80 09 4F 07 A0 00 00 00 04 10 10
+
+// --- STAGE 3: INSTALL FOR LOAD ---
+// Register the AMONER MURDER RASUK applet space
+80 E6 02 00 14 07 A0 00 00 00 04 10 10 08 A0 00 00 00 04 10 10 00 00 00
+
+// --- STAGE 4: DATA LOAD (THE CAP DATA) ---
+// This is the raw binary payload of the Murder Rasuk logic
+80 E8 00 00 FF [RAW_HEX_BLOCK_01...]
+80 E8 00 01 FF [RAW_HEX_BLOCK_02...]
+80 E8 80 02 4F [RAW_HEX_BLOCK_FINAL]
+
+// --- STAGE 5: INSTALL FOR INSTALL ---
+// Make the applet selectable for EBT Free Sale
+80 E6 0C 00 22 07 A0 00 00 00 04 10 10 07 A0 00 00 00 04 10 10 07 A0 00 00 00 04 10 10 01 00 02 C9 00 00 00
